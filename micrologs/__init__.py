@@ -3,9 +3,18 @@ Micrologs Python SDK
 https://github.com/OmDongaonkar03/micrologs-python
 
 Requires Python 3.8+. Zero dependencies — uses only the standard library.
+
+Async environments (FastAPI, Starlette, aiohttp):
+    This SDK is synchronous. Calling it directly inside an ``async def`` route
+    will block the event loop for the duration of the request (up to the timeout).
+    Wrap calls in a thread executor to avoid this:
+
+        import asyncio
+        result = await asyncio.to_thread(client.error, "something broke")
 """
 
 import json
+import urllib.error
 import urllib.parse
 import urllib.request
 import warnings
@@ -54,6 +63,16 @@ class Micrologs:
             )
             with urllib.request.urlopen(req, timeout=5) as res:
                 return json.loads(res.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            body = ""
+            try:
+                body = e.read().decode("utf-8")
+                parsed = json.loads(body)
+                msg = parsed.get("message", body)
+            except Exception:
+                msg = body or str(e)
+            warnings.warn(f"[Micrologs] HTTP {e.code}: {msg}")
+            return None
         except Exception as e:
             warnings.warn(f"[Micrologs] {e}")
             return None
@@ -70,6 +89,16 @@ class Micrologs:
             )
             with urllib.request.urlopen(req, timeout=5) as res:
                 return json.loads(res.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            body = ""
+            try:
+                body = e.read().decode("utf-8")
+                parsed = json.loads(body)
+                msg = parsed.get("message", body)
+            except Exception:
+                msg = body or str(e)
+            warnings.warn(f"[Micrologs] HTTP {e.code}: {msg}")
+            return None
         except Exception as e:
             warnings.warn(f"[Micrologs] {e}")
             return None

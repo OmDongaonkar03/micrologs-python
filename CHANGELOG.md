@@ -4,6 +4,19 @@ All notable changes to `micrologs` (Python SDK) will be documented here.
 
 ---
 
+## [1.0.0] - 2026-03-03
+
+### Added
+- HTTP errors (4xx/5xx) now surface the API's `message` field in the warning
+  (e.g. `[Micrologs] HTTP 401: Invalid API key`) instead of the raw urllib exception string
+- Module docstring documents the async caveat with the `asyncio.to_thread` workaround
+  for FastAPI/Starlette users
+
+### Requires
+- Micrologs engine v1.3.0+
+
+---
+
 ## [0.1.0] - 2026-03-02
 
 Initial release.

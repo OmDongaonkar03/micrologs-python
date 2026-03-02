@@ -304,6 +304,14 @@ if result is None:
     # Your application continues normally regardless
 ```
 
+**Async environments (FastAPI, Starlette, aiohttp):** This SDK is synchronous. Calling it directly inside an `async def` route will block the event loop. Wrap calls in a thread executor instead:
+
+```python
+import asyncio
+
+result = await asyncio.to_thread(client.error, "Payment failed")
+```
+
 ---
 
 ## Full method reference

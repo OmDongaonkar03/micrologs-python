@@ -80,12 +80,12 @@ All fields except `message` are optional. Uses keyword-only arguments after `mes
     "success": True,
     "message": "OK",
     "data": {
-        "group_id": 12
+        "queued": True
     }
 }
 ```
 
-`group_id` is the error group this occurrence was added to.
+The error is queued for async processing — the worker handles the DB write in the background.
 
 ---
 
